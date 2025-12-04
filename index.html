@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RecargaYa — Recargas fáciles y seguras</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+  :root{
+    --verde-boton: #2f7d3a;
+    --verde-neon: #2eff0d; /* verde neón suave para subtítulos */
+    --bg: #0b0b0b;
+    --muted: #9aa0a6;
+    --text-accent: #ffffff;
+  }
+  html,body{
+    height:100%;
+    font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;
+  }
+  body{
+    background:linear-gradient(180deg,#050505 0%, #0b0b0b 100%);
+    color:var(--text-accent);
+  }
+  .glass{
+    background:rgba(255,255,255,0.03);
+    backdrop-filter: blur(6px);
+    border:1px solid rgba(255,255,255,0.04);
+    margin-bottom:1rem;
+  }
+  .fade-up{
+    transform:translateY(12px);
+    opacity:0;
+    animation:fadeUp .55s ease forwards;
+  }
+  .delay-1{animation-delay:.08s}
+  .delay-2{animation-delay:.16s}
+  .delay-3{animation-delay:.24s}
+
+  @keyframes fadeUp{to{transform:none;opacity:1}}
+
+  /* Encabezado con imagen tipo banner grande */
+  .header-img img{
+    width: 100%;        /* ocupa todo el ancho del contenedor */
+    max-width: 700px;   /* no se salga en pantallas grandes */
+    height: auto;
+    border-radius: 12px;
+  }
+
+  /* SUBTÍTULOS VERDE NEÓN SUAVE */
+  h2, h4 {
+    color: var(--verde-neon);
+  }
+
+  /* SUBTÍTULO BLANCO ESPECIAL */
+  .form-subtitle {
+    color: #ffffff;
+  }
+
+  .btn-green{
+    background-color: var(--verde-boton);
+    color:#fff;
+    font-weight:600;
+    transition: all 0.3s;
+  }
+  .btn-green:hover{
+    background-color:#246b33;
+    transform:scale(1.05);
+  }
+  input::placeholder{color:rgba(255,255,255,0.35)}
+  .total-box{
+    font-size:1.1rem;
+    font-weight:700;
+    color:var(--verde-neon);
+  }
+  .small-text{
+    font-size:0.75rem;
+    color:#bbb;
+    margin-top:0.5rem;
+  }
+  .img-section img{
+    width: 100%;
+    border-radius: 12px;
+    margin-top: 1rem;
+  }
+</style>
+</head>
+
+<body class="min-h-screen flex flex-col items-center justify-start p-6">
+
+<!-- HEADER CON IMAGEN GRANDE -->
+<header class="w-full glass p-6 rounded-xl shadow-lg flex flex-col items-center justify-center fade-up delay-1 header-img">
+  <img src="https://i.imgur.com/d6gliU6_d.webp?maxwidth=760&fidelity=grand" alt="Logo RecargaYa"/>
+</header>
+
+<div class="max-w-4xl w-full grid grid-cols-1 lg:grid-cols-2 gap-8 mt-6">
+
+  <!-- LEFT INFO -->
+  <main class="glass p-8 rounded-xl shadow-lg fade-up delay-2">
+    <section class="mb-6">
+      <h2 class="text-lg font-semibold">Rapidez y Confianza</h2>
+      <p class="mt-2 text-sm text-gray-300">Recargas pequeñas y seguras con comisión fija de <strong>1 USD</strong>. Operamos con reglas claras para evitar fraudes.</p>
+    </section>
+
+    <section class="mt-6 p-4 rounded-lg border border-gray-800 bg-black/30">
+      <h4 class="text-sm font-medium">Reglas esenciales</h4>
+      <ul class="mt-2 text-sm text-gray-300 space-y-1">
+        <li>• Sin saldo acreditado, no hay recarga inmediata.</li>
+        <li>• Montos: 5$ — 20$</li>
+        <li>• No recargas a cuentas de terceros.</li>
+        <li>• Horario de atención: 8:00 AM — 6:00 PM.</li>
+      </ul>
+    </section>
+
+    <!-- NUEVA SECCIÓN DE IMAGEN -->
+    <section class="img-section mt-6">
+      <img src="https://i.imgur.com/SRVDFzM_d.webp?maxwidth=760&fidelity=grand" alt="Promoción RecargaYa"/>
+    </section>
+  </main>
+
+  <!-- RIGHT FORM -->
+  <aside class="glass p-8 rounded-xl shadow-lg fade-up delay-3">
+    <h3 class="text-lg font-semibold mb-3 form-subtitle">Solicita tu recarga</h3>
+
+    <form id="recargaForm" class="space-y-4" onsubmit="return handleSubmit(event)">
+
+      <!-- Nombre -->
+      <div>
+        <label class="text-xs text-gray-300">Nombre</label>
+        <input name="name" required class="w-full mt-1 p-3 rounded-md bg-transparent border border-gray-800" placeholder="Tu nombre"/>
+      </div>
+
+      <!-- Wallet -->
+      <div>
+        <label class="text-xs text-gray-300">Wallet destino</label>
+        <select name="wallet" id="walletSelect" required class="w-full mt-1 p-3 rounded-md bg-transparent border border-gray-800" onchange="actualizarPlaceholder()">
+          <option value="">Seleccione</option>
+          <option value="Wally">Wally</option>
+          <option value="Zinli">Zinli</option>
+        </select>
+      </div>
+
+      <!-- Número asociado -->
+      <div>
+        <label class="text-xs text-gray-300" id="labelWalletNumber">Número asociado</label>
+        <input 
+          name="wallet_number" 
+          id="walletNumber" 
+          required 
+          type="tel" 
+          inputmode="numeric"
+          pattern="[0-9]*"
+          class="w-full mt-1 p-3 rounded-md bg-transparent border border-gray-800" 
+          placeholder="Ingrese su número asociado"
+        />
+      </div>
+
+      <!-- Monto -->
+      <div>
+        <label class="text-xs text-gray-300">Monto (USD)</label>
+        <input name="amount" id="amount" required type="number" step="0.01" value="10"
+               class="w-full mt-1 p-3 rounded-md bg-transparent border border-gray-800"/>
+
+        <!-- ERROR DE MONTO -->
+        <span id="errorMonto" class="text-red-500 text-xs mt-1 hidden">
+          Solo procesamos recargas entre 5 USD y 20 USD.
+        </span>
+      </div>
+
+      <!-- Método de pago -->
+      <div>
+        <label class="text-xs text-gray-300">Método de pago</label>
+        <select name="pay_method" required class="w-full mt-1 p-3 rounded-md bg-transparent border border-gray-800">
+          <option value="Pago Móvil">Pago Móvil</option>
+          <option value="Transferencia">Transferencia bancaria</option>
+          
+        </select>
+      </div>
+
+      <!-- Calculadora -->
+      <div class="mt-4 p-4 rounded-lg border border-gray-800 bg-black/40">
+        <h4 class="text-sm text-gray-300 mb-2">Total a transferir</h4>
+        <div class="text-gray-300 text-sm space-y-1">
+          <div>Monto y comisión: <span id="displayAmount">10</span>$ + <span id="displayComision">1</span>$</div>
+          <div class="total-box">Monto final: <span id="displayTotal">11</span>$</div>
+        </div>
+        <p class="small-text">Al presionar "Solicitar recarga" serás redirigido a WhatsApp donde recibirás los datos completos.</p>
+      </div>
+
+      <button type="submit" class="btn-green px-4 py-3 rounded-md w-full">Solicitar recarga</button>
+
+    </form>
+  </aside>
+</div>
+
+<!-- CONTACTO -->
+<section class="w-full glass p-6 rounded-xl shadow-lg mt-8 text-center fade-up delay-2">
+  <h3 class="text-lg font-semibold accent mb-2">Contacto</h3>
+  <p class="text-sm text-gray-300 mb-4">Para comprobantes o consultas rápidas, contáctanos</p>
+
+  <a href="https://wa.me/584122818064" target="_blank"
+     class="btn-green px-6 py-3 rounded-md hover:scale-105 transition-transform flex items-center justify-center gap-2">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" class="w-5 h-5"/>
+    Contacto
+  </a>
+</section>
+
+<script>
+  const comision = 1;
+  const amountInput = document.getElementById('amount');
+  const displayAmount = document.getElementById('displayAmount');
+  const displayComision = document.getElementById('displayComision');
+  const displayTotal = document.getElementById('displayTotal');
+
+  function actualizarTotal() {
+    let monto = parseFloat(amountInput.value) || 0;
+    const errorMsg = document.getElementById('errorMonto');
+
+    if (monto < 5 || monto > 20) {
+      amountInput.classList.add("border-red-500");
+      errorMsg.classList.remove("hidden");
+      displayAmount.textContent = "—";
+      displayTotal.textContent = "—";
+      return;
+    } else {
+      amountInput.classList.remove("border-red-500");
+      errorMsg.classList.add("hidden");
+    }
+
+    const totalUSD = monto + comision;
+    displayAmount.textContent = monto.toFixed(2);
+    displayComision.textContent = comision.toFixed(2);
+    displayTotal.textContent = totalUSD.toFixed(2);
+  }
+
+  amountInput.addEventListener('input', actualizarTotal);
+  actualizarTotal();
+
+  function actualizarPlaceholder(){
+    const s = document.getElementById('walletSelect').value;
+    const label = document.getElementById('labelWalletNumber');
+    const input = document.getElementById('walletNumber');
+
+    if(s === 'Wally'){ label.textContent="Número asociado a Wally"; input.placeholder="Ingrese su número asociado a Wally"; }
+    else if(s === 'Zinli'){ label.textContent="Número asociado a Zinli"; input.placeholder="Ingrese su número asociado a Zinli"; }
+    else{ label.textContent="Número asociado"; input.placeholder="Ingrese su número asociado"; }
+  }
+
+  function handleSubmit(e){
+    e.preventDefault();
+    const data = new FormData(e.target);
+
+    const name = data.get('name').trim();
+    const wallet = data.get('wallet');
+    const wallet_number = data.get('wallet_number').trim();
+    const amount = parseFloat(data.get('amount')) || 0;
+    const pay_method = data.get('pay_method');
+
+    if(amount < 5 || amount > 20) return;
+
+    const total = (amount + comision).toFixed(2);
+
+    const txt = `Hola, soy ${name}.\n\n- Solicito recarga de: ${amount} USD\n- Wallet: ${wallet}\n- Número de wallet: ${wallet_number}\n- Método de pago: ${pay_method}\n- Total a transferir: ${total} USD\n- Espero instrucciones de pago.`;
+
+    window.open(`https://wa.me/584122818064?text=${encodeURIComponent(txt)}`, '_blank');
+  }
+</script>
+
+</body>
+</html>
